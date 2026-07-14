@@ -1,1820 +1,550 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>IT-Grundlagen Quiz - 200 Fragen</title>
-
-
-<style>
-
-body{
-
-font-family:Arial, Helvetica, sans-serif;
-background:linear-gradient(135deg,#e3f2fd,#f5f5f5);
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-margin:0;
-
-}
-
-
-.container{
-
-background:white;
-width:750px;
-max-width:90%;
-padding:30px;
-border-radius:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.2);
-
-}
-
-
-h1{
-
-text-align:center;
-color:#1976d2;
-
-}
-
-
-h2{
-
-color:#333;
-
-}
-
-
-#frageNummer{
-
-font-weight:bold;
-color:#555;
-margin-bottom:15px;
-
-}
-
-
-
-.fortschritt{
-
-width:100%;
-height:15px;
-background:#ddd;
-border-radius:10px;
-overflow:hidden;
-margin-bottom:25px;
-
-}
-
-
-#balken{
-
-height:100%;
-width:0%;
-background:#4caf50;
-transition:0.3s;
-
-}
-
-
-
-.antwort{
-
-display:block;
-background:#f4f4f4;
-padding:15px;
-margin:10px 0;
-border-radius:10px;
-cursor:pointer;
-transition:0.2s;
-
-}
-
-
-.antwort:hover{
-
-background:#e3f2fd;
-
-}
-
-
-
-button{
-
-background:#1976d2;
-color:white;
-border:none;
-padding:12px 25px;
-font-size:16px;
-border-radius:8px;
-cursor:pointer;
-margin-top:20px;
-
-}
-
-
-button:hover{
-
-background:#0d47a1;
-
-}
-
-
-
-#ergebnis{
-
-margin-top:20px;
-font-weight:bold;
-min-height:25px;
-
-}
-
-
-.richtig{
-
-color:green;
-
-}
-
-
-.falsch{
-
-color:red;
-
-}
-
-
-
-#ende{
-
-text-align:center;
-
-}
-
-
-
-</style>
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Die Faulen Arbeitstiere</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Pixel:ELSH@61.8&display=swap" rel="stylesheet">
 </head>
-
-
-
 <body>
 
+<div class="quiz-container">
+    <h1>Quiz der Faulen Arbeitstiere</h1>
 
-<div class="container">
+    <div class="fortschritt">
+        <div id="balken"></div>
+    </div>
 
+    <p id="frageNummer"></p>
+    <h2 id="frage"></h2>
 
-<h1>💻 IT-Grundlagen Quiz</h1>
+    <div id="antworten"></div>
 
+    <button class="quiz-btn" onclick="pruefen()">Antwort pruefen</button>
+    <button class="quiz-btn" id="next-btn" onclick="naechsteFrage()">Naechste Frage</button>
+    <button id="quiz-music">Musik starten</button>
 
-<div class="fortschritt">
-
-<div id="balken"></div>
-
+    <p id="ergebnis"></p>
 </div>
 
-
-<p id="frageNummer"></p>
-
-
-<h2 id="frage"></h2>
-
-
-
-<div id="antworten"></div>
-
-
-
-<button onclick="pruefen()">
-
-Antwort prüfen
-
-</button>
-
-
-
-<p id="ergebnis"></p>
-
-
-
-</div>
-
-
-
-
+<audio id="bg-music" loop>
+    <source src="AUDIO_URL_PLATZHALTER" type="audio/mp4">
+    Ihr Browser unterstuetzt das Audio-Element nicht.
+</audio>
 
 <script>
-
-
-const fragen=[
-
-
-{
-frage:"Wofür steht die Abkürzung LAN?",
-antworten:[
-"Local Access Network",
-"Local Area Network",
-"Long Area Network",
-"Large Access Network"
-],
-richtig:1,
-erklaerung:"LAN steht für Local Area Network."
-},
-
-
-{
-frage:"Was ist der wichtigste Unterschied zwischen LAN und WLAN?",
-antworten:[
-"WLAN ist schneller.",
-"LAN funktioniert weltweit.",
-"WLAN ist kabellos.",
-"LAN benötigt immer einen Router."
-],
-richtig:2,
-erklaerung:"Ein WLAN verbindet Geräte kabellos über Funk."
-},
-
-
-{
-frage:"Was beschreibt ein WAN?",
-antworten:[
-"Ein lokales Netzwerk",
-"Ein Druckernetzwerk",
-"Ein Netzwerk über große Entfernungen",
-"Ein Funknetzwerk"
-],
-richtig:2,
-erklaerung:"WAN steht für Wide Area Network."
-},
-
-
-{
-frage:"Welche Hauptaufgabe hat ein Router?",
-antworten:[
-"Geräte innerhalb eines LAN verbinden",
-"Das lokale Netzwerk mit dem Internet verbinden",
-"Dateien speichern",
-"Programme installieren"
-],
-richtig:1,
-erklaerung:"Router verbinden verschiedene Netzwerke miteinander."
-},
-
-
-{
-frage:"Welche Aufgabe erfüllt ein Switch?",
-antworten:[
-"Mehrere Geräte innerhalb eines LAN verbinden",
-"WLAN bereitstellen",
-"Viren entfernen",
-"Internet verschlüsseln"
-],
-richtig:0,
-erklaerung:"Ein Switch verbindet Geräte innerhalb eines lokalen Netzwerks."
-},
-
-
-{
-frage:"Wozu dient ein Access Point?",
-antworten:[
-"Zum Drucken",
-"Zum Bereitstellen eines WLANs",
-"Zum Speichern von Dateien",
-"Zum Erstellen von Backups"
-],
-richtig:1,
-erklaerung:"Ein Access Point ermöglicht drahtlosen Netzwerkzugang."
-},
-
-
-{
-frage:"Wozu dient eine IP-Adresse?",
-antworten:[
-"Zur Verschlüsselung",
-"Zur eindeutigen Identifikation eines Geräts",
-"Zum Speichern von Dateien",
-"Zur Erhöhung der Geschwindigkeit"
-],
-richtig:1,
-erklaerung:"Eine IP-Adresse identifiziert ein Gerät im Netzwerk."
-},
-
-
-{
-frage:"Welche Rolle übernimmt ein Server?",
-antworten:[
-"Er nutzt Dienste.",
-"Er bietet Dienste und Ressourcen an.",
-"Er ersetzt den Router.",
-"Er schützt automatisch vor Viren."
-],
-richtig:1,
-erklaerung:"Server stellen Dienste für Clients bereit."
-},
-
-
-{
-frage:"Welche Aufgabe hat ein Client?",
-antworten:[
-"Er stellt Dienste bereit.",
-"Er nutzt Dienste eines Servers.",
-"Er verwaltet alle Netzwerke.",
-"Er ersetzt den Switch."
-],
-richtig:1,
-erklaerung:"Clients greifen auf Serverdienste zu."
-},
-
-
-{
-frage:"Was bedeutet HTTPS?",
-antworten:[
-"Eine unverschlüsselte Verbindung",
-"Eine verschlüsselte Verbindung zu Webseiten",
-"Ein Betriebssystem",
-"Ein Antivirenprogramm"
-],
-richtig:1,
-erklaerung:"HTTPS schützt Daten zwischen Browser und Webseite."
-},
-
-
-{
-frage:"Welche Aussage zu einem VPN ist richtig?",
-antworten:[
-"Es macht den Computer schneller.",
-"Es verschlüsselt die Datenübertragung.",
-"Es ersetzt eine Firewall.",
-"Es entfernt Viren."
-],
-richtig:1,
-erklaerung:"Ein VPN verschlüsselt die Verbindung und erhöht die Privatsphäre."
-},
-
-
-{
-frage:"Was ist der Unterschied zwischen Download und Upload?",
-antworten:[
-"Download bedeutet Hochladen.",
-"Download bedeutet Herunterladen, Upload bedeutet Hochladen.",
-"Beides bedeutet dasselbe.",
-"Download funktioniert nur über WLAN."
-],
-richtig:1,
-erklaerung:"Download lädt Daten herunter, Upload sendet Daten ins Internet."
-},
-
-
-{
-frage:"100 Mbit/s entsprechen ungefähr:",
-antworten:[
-"100 MB/s",
-"50 MB/s",
-"12,5 MB/s",
-"8 MB/s"
-],
-richtig:2,
-erklaerung:"Da 1 Byte = 8 Bit gilt: 100 geteilt durch 8 = 12,5 MB/s."
-},
-
-
-{
-frage:"Was bedeutet Latenz oder Ping?",
-antworten:[
-"Die Reaktionszeit einer Verbindung",
-"Die Größe einer Festplatte",
-"Die Anzahl der Dateien",
-"Die Bildschirmauflösung"
-],
-richtig:0,
-erklaerung:"Ein niedriger Ping bedeutet eine schnelle Reaktion."
-},
-
-
-{
-frage:"Welche Backup-Art speichert alle Daten?",
-antworten:[
-"Vollbackup",
-"Inkrementelles Backup",
-"Differenzielles Backup",
-"Cloud-Synchronisation"
-],
-richtig:0,
-erklaerung:"Ein Vollbackup sichert alle ausgewählten Daten."
-},
-
-
-{
-frage:"Welche Backup-Art speichert nur Änderungen seit dem letzten Backup?",
-antworten:[
-"Vollbackup",
-"Inkrementelles Backup",
-"Festplattenbackup",
-"Systemupdate"
-],
-richtig:1,
-erklaerung:"Ein inkrementelles Backup speichert nur neue Änderungen."
-},
-
-
-{
-frage:"Welche Backup-Art speichert Änderungen seit dem letzten Vollbackup?",
-antworten:[
-"Differenzielles Backup",
-"Inkrementelles Backup",
-"Vollbackup",
-"Cloudbackup"
-],
-richtig:0,
-erklaerung:"Ein differenzielles Backup basiert auf dem letzten Vollbackup."
-},
-
-
-{
-frage:"Was bedeutet die 3-2-1-Regel?",
-antworten:[
-"3 Passwörter, 2 Benutzer, 1 Computer",
-"3 Kopien, 2 Speichermedien, 1 Kopie an anderem Ort",
-"3 Server, 2 Router, 1 Firewall",
-"3 Updates, 2 Programme, 1 Backup"
-],
-richtig:1,
-erklaerung:"Die Regel schützt vor Datenverlust."
-},
-
-
-{
-frage:"Was bedeutet Authentifizierung?",
-antworten:[
-"Wer bist du?",
-"Was darfst du?",
-"Wie schnell ist dein Internet?",
-"Wie groß ist deine Festplatte?"
-],
-richtig:0,
-erklaerung:"Authentifizierung überprüft die Identität."
-},
-
-
-{
-frage:"Was bedeutet Autorisierung?",
-antworten:[
-"Wer bist du?",
-"Was darfst du tun?",
-"Welche Hardware besitzt du?",
-"Welche Software nutzt du?"
-],
-richtig:1,
-erklaerung:"Autorisierung legt Rechte fest."
-},
-
-
-{
-frage:"Welche Malware tarnt sich als nützliches Programm?",
-antworten:[
-"Virus",
-"Wurm",
-"Trojaner",
-"Firewall"
-],
-richtig:2,
-erklaerung:"Ein Trojaner sieht harmlos aus, enthält aber Schadcode."
-},
-
-
-{
-frage:"Was ist Ransomware?",
-antworten:[
-"Ein Programm zum Schreiben",
-"Schadsoftware, die Daten verschlüsselt und Geld fordert",
-"Ein Betriebssystem",
-"Ein Backup"
-],
-richtig:1,
-erklaerung:"Ransomware sperrt Daten und verlangt Lösegeld."
-},
-
-
-{
-frage:"Was macht ein Antivirenprogramm?",
-antworten:[
-"Es erkennt und entfernt Schadsoftware",
-"Es erhöht automatisch den RAM",
-"Es ersetzt das Betriebssystem",
-"Es erstellt Webseiten"
-],
-richtig:0,
-erklaerung:"Antivirenprogramme schützen vor Malware."
-},
-
-
-{
-frage:"Was sind Virensignaturen?",
-antworten:[
-"Bekannte Merkmale von Schadsoftware",
-"Passwörter",
-"Internetadressen",
-"Hardwareteile"
-],
-richtig:0,
-erklaerung:"Antivirenprogramme erkennen bekannte Schadcodes."
-},
-
-
-{
-frage:"Was ist eine Quarantäne bei Antivirenprogrammen?",
-antworten:[
-"Ein Bereich für isolierte Dateien",
-"Ein Backup",
-"Ein Benutzerkonto",
-"Ein Netzwerk"
-],
-richtig:0,
-erklaerung:"Verdächtige Dateien werden isoliert."
-},
-
-
-{
-frage:"Welche Aufgabe hat eine Firewall?",
-antworten:[
-"Datenverkehr überwachen und unerlaubte Zugriffe blockieren",
-"Dateien speichern",
-"Programme installieren",
-"Fotos bearbeiten"
-],
-richtig:0,
-erklaerung:"Firewalls schützen Netzwerke vor Angriffen."
-},
-
-
-{
-frage:"Was ist eine Software-Firewall?",
-antworten:[
-"Eine Firewall auf dem Computer",
-"Eine Festplatte",
-"Ein Routerkabel",
-"Ein Betriebssystem"
-],
-richtig:0,
-erklaerung:"Software-Firewalls laufen direkt auf Geräten."
-},
-
-
-{
-frage:"Was ist eine Hardware-Firewall?",
-antworten:[
-"Eine Firewall im Netzwerkgerät wie Router",
-"Ein USB-Stick",
-"Ein Bildschirm",
-"Eine App"
-],
-richtig:0,
-erklaerung:"Hardware-Firewalls schützen ganze Netzwerke."
-},
-
-
-{
-frage:"Was ist ein Betriebssystem?",
-antworten:[
-"Die grundlegende Software eines Computers",
-"Ein Kabel",
-"Eine Maus",
-"Ein Spiel"
-],
-richtig:0,
-erklaerung:"Das Betriebssystem verbindet Hardware und Programme."
-},
-
-
-{
-frage:"Welche Aufgabe hat ein Betriebssystem?",
-antworten:[
-"Hardware und Programme verwalten",
-"Nur Bilder anzeigen",
-"Nur Dateien speichern",
-"Internet ersetzen"
-],
-richtig:0,
-erklaerung:"Das Betriebssystem steuert viele Computerfunktionen."
-},
-
-
-{
-frage:"Was bedeutet GUI?",
-antworten:[
-"Grafische Benutzeroberfläche",
-"Großes USB-Gerät",
-"Globale Internet-Verbindung",
-"Gerätesoftware"
-],
-richtig:0,
-erklaerung:"GUI bedeutet Bedienung über Fenster und Symbole."
-},
-
-
-{
-frage:"Was bedeutet CLI?",
-antworten:[
-"Bedienung über Texteingaben und Befehle",
-"Ein Bildschirmtyp",
-"Ein Speichermedium",
-"Eine Grafikkarte"
-],
-richtig:0,
-erklaerung:"CLI nutzt eine Kommandozeile."
-},
-
-
-{
-frage:"Was ist Multitasking?",
-antworten:[
-"Mehrere Programme gleichzeitig ausführen",
-"Mehrere Passwörter benutzen",
-"Mehrere Computer kaufen",
-"Dateien löschen"
-],
-richtig:0,
-erklaerung:"Multitasking ermöglicht paralleles Arbeiten."
-},
-
-
-{
-frage:"Was ist ein Treiber?",
-antworten:[
-"Ein Programm zur Steuerung von Hardware",
-"Ein Virus",
-"Eine Webseite",
-"Ein Benutzerkonto"
-],
-richtig:0,
-erklaerung:"Treiber ermöglichen die Kommunikation zwischen Betriebssystem und Hardware."
-},
-
-
-{
-frage:"Was ist RAM?",
-antworten:[
-"Ein schneller Speicher für laufende Programme",
-"Eine dauerhafte Festplatte",
-"Ein Router",
-"Eine Firewall"
-],
-richtig:0,
-erklaerung:"RAM speichert aktuell benötigte Daten."
-},
-
-
-{
-frage:"Was passiert, wenn der RAM nicht ausreicht?",
-antworten:[
-"Der Computer kann langsamer werden",
-"Der Bildschirm verschwindet",
-"Das Internet wird gelöscht",
-"Die Tastatur wird entfernt"
-],
-richtig:0,
-erklaerung:"Das System nutzt dann langsameren virtuellen Speicher."
-},
-
-
-{
-frage:"Was speichert eine SSD?",
-antworten:[
-"Programme, Dateien und Betriebssystem dauerhaft",
-"Nur Passwörter",
-"Nur Webseiten",
-"Nur Bilder"
-],
-richtig:0,
-erklaerung:"SSD ist ein Massenspeicher."
-},
-
-
-{
-frage:"Was zeigt der Task-Manager?",
-antworten:[
-"Auslastung von CPU, RAM und Programmen",
-"Nur Fotos",
-"Nur Passwörter",
-"Nur WLAN"
-],
-richtig:0,
-erklaerung:"Der Task-Manager zeigt Systeminformationen."
-},
-
-{
-frage:"Was zeigt der Geräte-Manager?",
-antworten:[
-"Die angeschlossene Hardware des Computers",
-"Internetgeschwindigkeit",
-"Benutzerpasswörter",
-"Webseiten"
-],
-richtig:0,
-erklaerung:"Der Geräte-Manager zeigt Hardware und Treiber."
-},
-
-
-{
-frage:"Warum sind Systeminformationen wichtig?",
-antworten:[
-"Um Hardware und Software besser beurteilen zu können",
-"Um Dateien automatisch zu löschen",
-"Um Viren zu erzeugen",
-"Um das Internet abzuschalten"
-],
-richtig:0,
-erklaerung:"Systeminformationen helfen bei Problemen und Kaufentscheidungen."
-},
-
-
-{
-frage:"Was ist eine CPU?",
-antworten:[
-"Der Prozessor des Computers",
-"Ein Speicherstick",
-"Ein Netzwerk",
-"Ein Bildschirm"
-],
-richtig:0,
-erklaerung:"Die CPU führt Berechnungen und Befehle aus."
-},
-
-
-{
-frage:"Warum ist ein schneller Prozessor wichtig?",
-antworten:[
-"Programme können schneller ausgeführt werden",
-"Der Bildschirm wird größer",
-"Dateien werden automatisch gespeichert",
-"Das Internet wird kostenlos"
-],
-richtig:0,
-erklaerung:"Die CPU beeinflusst die Rechenleistung."
-},
-
-
-{
-frage:"Was ist eine HDD?",
-antworten:[
-"Eine klassische Festplatte",
-"Ein Browser",
-"Eine Firewall",
-"Ein Betriebssystem"
-],
-richtig:0,
-erklaerung:"HDD ist ein magnetischer Massenspeicher."
-},
-
-
-{
-frage:"Was ist eine SSD?",
-antworten:[
-"Ein schneller elektronischer Massenspeicher",
-"Eine Tastatur",
-"Ein Router",
-"Ein Monitor"
-],
-richtig:0,
-erklaerung:"SSDs sind schneller als klassische HDDs."
-},
-
-
-{
-frage:"Wie prüft man freien Speicherplatz?",
-antworten:[
-"Im Datei-Explorer unter Dieser PC",
-"Im Papierkorb",
-"Im Browser",
-"Im Lautstärkemenü"
-],
-richtig:0,
-erklaerung:"Der Explorer zeigt belegten und freien Speicher."
-},
-
-
-{
-frage:"Was bedeutet Installation eines Programms?",
-antworten:[
-"Programmdateien werden auf dem Computer eingerichtet",
-"Das Programm wird gelöscht",
-"Der Computer wird ausgeschaltet",
-"Das Internet wird getrennt"
-],
-richtig:0,
-erklaerung:"Bei einer Installation werden notwendige Dateien gespeichert."
-},
-
-
-{
-frage:"Welche Dateiendungen sind typische Installationsdateien?",
-antworten:[
-".exe und .msi",
-".jpg und .png",
-".mp3 und .wav",
-".txt und .doc"
-],
-richtig:0,
-erklaerung:"Viele Windows-Programme nutzen .exe oder .msi."
-},
-
-
-{
-frage:"Was ist der Microsoft Store?",
-antworten:[
-"Eine Plattform zum Herunterladen von Apps",
-"Eine Festplatte",
-"Ein Netzwerkgerät",
-"Ein Passwortmanager"
-],
-richtig:0,
-erklaerung:"Der Microsoft Store bietet geprüfte Anwendungen."
-},
-
-
-{
-frage:"Warum sollte man Programme aus vertrauenswürdigen Quellen installieren?",
-antworten:[
-"Um Schadsoftware zu vermeiden",
-"Um Speicher zu verlieren",
-"Um Updates zu verhindern",
-"Um Dateien zu löschen"
-],
-richtig:0,
-erklaerung:"Unsichere Downloads können Malware enthalten."
-},
-
-
-{
-frage:"Was bedeutet Deinstallation?",
-antworten:[
-"Entfernen eines Programms vom Computer",
-"Installation eines Updates",
-"Erstellen eines Backups",
-"Ändern des Hintergrundbildes"
-],
-richtig:0,
-erklaerung:"Beim Deinstallieren werden Programme entfernt."
-},
-
-
-{
-frage:"Warum sollte man unnötige Programme entfernen?",
-antworten:[
-"Um Speicherplatz freizugeben und Sicherheit zu erhöhen",
-"Um den Bildschirm zu vergrößern",
-"Um WLAN auszuschalten",
-"Um Passwörter zu löschen"
-],
-richtig:0,
-erklaerung:"Weniger unnötige Programme verbessern Ordnung und Sicherheit."
-},
-
-
-{
-frage:"Was ist ein Standardprogramm?",
-antworten:[
-"Ein Programm, das automatisch bestimmte Dateien öffnet",
-"Ein Antivirus",
-"Ein Treiber",
-"Ein Netzwerk"
-],
-richtig:0,
-erklaerung:"Beispiel: PDF-Dateien werden mit einem PDF-Reader geöffnet."
-},
-
-
-{
-frage:"Welches Programm öffnet normalerweise .docx Dateien?",
-antworten:[
-"Word",
-"Paint",
-"Browser",
-"Rechner"
-],
-richtig:0,
-erklaerung:"DOCX-Dateien werden meist mit Textverarbeitungen geöffnet."
-},
-
-
-{
-frage:"Welches Programm öffnet normalerweise PDF-Dateien?",
-antworten:[
-"PDF-Reader",
-"Task-Manager",
-"Geräte-Manager",
-"Datei-Explorer"
-],
-richtig:0,
-erklaerung:"PDF-Reader zeigen PDF-Dokumente an."
-},
-
-
-{
-frage:"Was ist der Desktop?",
-antworten:[
-"Die Arbeitsfläche des Betriebssystems",
-"Eine Festplatte",
-"Ein Server",
-"Ein Router"
-],
-richtig:0,
-erklaerung:"Der Desktop zeigt Symbole und Verknüpfungen."
-},
-
-
-{
-frage:"Wie kann man den Desktop-Hintergrund ändern?",
-antworten:[
-"Über Einstellungen → Personalisierung",
-"Über den Papierkorb",
-"Über den Task-Manager",
-"Über die Firewall"
-],
-richtig:0,
-erklaerung:"Die Personalisierung enthält Hintergrundoptionen."
-},
-
-
-{
-frage:"Welche Möglichkeiten gibt es für den Hintergrund?",
-antworten:[
-"Bild, Farbe oder Diashow",
-"Nur Text",
-"Nur Videos",
-"Nur schwarz"
-],
-richtig:0,
-erklaerung:"Windows bietet mehrere Hintergrundarten."
-},
-
-
-{
-frage:"Welche Anzeigeeinstellungen kann man verändern?",
-antworten:[
-"Helligkeit, Auflösung und Skalierung",
-"Passwörter",
-"Virensignaturen",
-"Benutzerrechte"
-],
-richtig:0,
-erklaerung:"Anzeigeeinstellungen verändern die Darstellung."
-},
-
-
-{
-frage:"Was bedeutet Auflösung?",
-antworten:[
-"Anzahl der Bildpunkte auf dem Bildschirm",
-"Geschwindigkeit des Internets",
-"Größe des Arbeitsspeichers",
-"Anzahl der Dateien"
-],
-richtig:0,
-erklaerung:"Mehr Pixel bedeuten meist ein schärferes Bild."
-},
-
-
-{
-frage:"Was bedeutet Skalierung?",
-antworten:[
-"Größe von Texten und Symbolen verändern",
-"Dateien sichern",
-"Programme installieren",
-"Internet verbinden"
-],
-richtig:0,
-erklaerung:"Skalierung verbessert die Lesbarkeit."
-},
-
-
-{
-frage:"Welche Tastenkombination öffnet die Windows-Einstellungen?",
-antworten:[
-"Windows + I",
-"STRG + ALT + ENTF",
-"ALT + F4",
-"Windows + E"
-],
-richtig:0,
-erklaerung:"Windows + I öffnet die Einstellungen."
-},
-
-
-{
-frage:"Wie wechselt man die Tastatursprache unter Windows?",
-antworten:[
-"Windows + Leertaste",
-"STRG + S",
-"ALT + TAB",
-"F5"
-],
-richtig:0,
-erklaerung:"Windows + Leertaste wechselt Eingabesprachen."
-},
-
-
-{
-frage:"Warum sind Updates wichtig?",
-antworten:[
-"Sie schließen Sicherheitslücken und verbessern das System",
-"Sie entfernen Hardware",
-"Sie machen Programme illegal",
-"Sie löschen alle Daten"
-],
-richtig:0,
-erklaerung:"Updates erhöhen Sicherheit und Stabilität."
-},
-
-
-{
-frage:"Was installiert Windows Update?",
-antworten:[
-"System-, Sicherheits- und Treiberupdates",
-"Nur Spiele",
-"Nur Bilder",
-"Nur Musik"
-],
-richtig:0,
-erklaerung:"Windows Update verwaltet wichtige Aktualisierungen."
-},
-
-
-{
-frage:"Warum kann nach einem Update ein Neustart nötig sein?",
-antworten:[
-"Damit Änderungen vollständig übernommen werden",
-"Damit Dateien verschwinden",
-"Damit WLAN gelöscht wird",
-"Damit Programme gesperrt werden"
-],
-richtig:0,
-erklaerung:"Ein Neustart aktiviert Systemänderungen."
-},
-
-
-{
-frage:"Was gehört zur Computerwartung?",
-antworten:[
-"Updates, Reinigung und Sicherheitsprüfungen",
-"Nur Hintergrundbilder ändern",
-"Nur Spiele spielen",
-"Passwörter weitergeben"
-],
-richtig:0,
-erklaerung:"Wartung hält Systeme sicher und leistungsfähig."
-},
-
-
-{
-frage:"Warum sollte man den Computer regelmäßig neu starten?",
-antworten:[
-"Um Systemprozesse zu aktualisieren",
-"Um Hardware zu beschädigen",
-"Um Speicher zu löschen",
-"Um Internet zu entfernen"
-],
-richtig:0,
-erklaerung:"Neustarts können Fehler beheben."
-},
-{
-frage:"Was bedeutet Ergonomie am Computerarbeitsplatz?",
-antworten:[
-"Anpassung des Arbeitsplatzes an den Menschen",
-"Den Computer schneller machen",
-"Mehr Programme installieren",
-"Internet verbessern"
-],
-richtig:0,
-erklaerung:"Ergonomie schützt Gesundheit und verbessert Komfort."
-},
-
-
-{
-frage:"Wie weit sollte der Bildschirm ungefähr entfernt sein?",
-antworten:[
-"50–80 cm",
-"5 cm",
-"2 Meter",
-"10 Meter"
-],
-richtig:0,
-erklaerung:"Ein Abstand von etwa 50–80 cm ist empfehlenswert."
-},
-
-
-{
-frage:"Wo sollte die Oberkante des Bildschirms sein?",
-antworten:[
-"Auf Augenhöhe",
-"Unter dem Tisch",
-"Über der Decke",
-"Auf dem Boden"
-],
-richtig:0,
-erklaerung:"Die Augenhöhe verhindert eine ungünstige Haltung."
-},
-
-
-{
-frage:"Warum sollte man regelmäßig Pausen machen?",
-antworten:[
-"Um Augen und Körper zu entlasten",
-"Um Updates zu löschen",
-"Um Speicherplatz zu erhöhen",
-"Um Programme zu installieren"
-],
-richtig:0,
-erklaerung:"Pausen reduzieren körperliche Belastungen."
-},
-
-
-{
-frage:"Was kann eine falsche Sitzhaltung verursachen?",
-antworten:[
-"Rücken- und Nackenschmerzen",
-"Schnelleres Internet",
-"Mehr Speicherplatz",
-"Neue Programme"
-],
-richtig:0,
-erklaerung:"Falsche Haltung kann Beschwerden verursachen."
-},
-
-
-{
-frage:"Was bedeutet RSI?",
-antworten:[
-"Belastungsbedingte Verletzung durch wiederholte Bewegungen",
-"Eine Internetverbindung",
-"Ein Dateiformat",
-"Ein Betriebssystem"
-],
-richtig:0,
-erklaerung:"RSI kann durch dauerhafte Fehlbelastungen entstehen."
-},
-
-
-{
-frage:"Welche Raumtemperatur ist am Arbeitsplatz sinnvoll?",
-antworten:[
-"Etwa 21–22 °C",
-"0 °C",
-"50 °C",
-"100 °C"
-],
-richtig:0,
-erklaerung:"Eine angenehme Temperatur unterstützt Konzentration."
-},
-
-
-{
-frage:"Welche Luftfeuchtigkeit ist geeignet?",
-antworten:[
-"40–65 %",
-"0 %",
-"100 %",
-"Nur 5 %"
-],
-richtig:0,
-erklaerung:"Eine mittlere Luftfeuchtigkeit ist angenehm."
-},
-
-
-{
-frage:"Was ist Barrierefreiheit?",
-antworten:[
-"Technik für möglichst viele Menschen nutzbar machen",
-"Computer nur für Experten bauen",
-"Internet sperren",
-"Programme entfernen"
-],
-richtig:0,
-erklaerung:"Barrierefreiheit ermöglicht Nutzung für verschiedene Menschen."
-},
-
-
-{
-frage:"Wozu dient Spracherkennungssoftware?",
-antworten:[
-"Texte durch Sprache eingeben",
-"Festplatten reparieren",
-"Viren löschen",
-"Internet schneller machen"
-],
-richtig:0,
-erklaerung:"Spracherkennung ermöglicht Eingaben per Stimme."
-},
-
-
-{
-frage:"Was macht ein Bildschirmleseprogramm?",
-antworten:[
-"Es liest Bildschirminhalte laut vor",
-"Es löscht Dateien",
-"Es erstellt Backups",
-"Es installiert Treiber"
-],
-richtig:0,
-erklaerung:"Bildschirmleser helfen sehbehinderten Personen."
-},
-
-
-{
-frage:"Wozu dient eine Bildschirmvergrößerung?",
-antworten:[
-"Sie vergrößert Inhalte",
-"Sie verschlüsselt Daten",
-"Sie löscht Programme",
-"Sie erhöht CPU-Leistung"
-],
-richtig:0,
-erklaerung:"Vergrößerungen verbessern die Lesbarkeit."
-},
-
-
-{
-frage:"Warum werden Untertitel verwendet?",
-antworten:[
-"Zur Unterstützung hörbehinderter Menschen",
-"Zum Speichern von Dateien",
-"Zum Schutz vor Viren",
-"Zum Erhöhen der Geschwindigkeit"
-],
-richtig:0,
-erklaerung:"Untertitel machen Inhalte zugänglicher."
-},
-
-
-{
-frage:"Warum ist Energiesparen wichtig?",
-antworten:[
-"Es reduziert Stromverbrauch und schont Ressourcen",
-"Es macht Computer größer",
-"Es entfernt Updates",
-"Es verhindert Backups"
-],
-richtig:0,
-erklaerung:"Weniger Energieverbrauch ist nachhaltiger."
-},
-
-
-{
-frage:"Was gehört zum Recycling von Computern?",
-antworten:[
-"Elektroschrott fachgerecht entsorgen",
-"Geräte wegwerfen",
-"Festplatten zerstören",
-"Programme löschen"
-],
-richtig:0,
-erklaerung:"Elektronik enthält wertvolle Materialien."
-},
-
-
-{
-frage:"Warum sollte man Geräte reparieren statt wegwerfen?",
-antworten:[
-"Um Ressourcen zu sparen",
-"Um weniger Speicher zu haben",
-"Um Internet abzuschalten",
-"Um Updates zu vermeiden"
-],
-richtig:0,
-erklaerung:"Reparieren verlängert die Nutzungsdauer."
-},
-
-
-{
-frage:"Was benötigt man für eine Internetverbindung?",
-antworten:[
-"Provider, Modem oder Router und Anschluss",
-"Nur eine Tastatur",
-"Nur einen Bildschirm",
-"Nur eine Datei"
-],
-richtig:0,
-erklaerung:"Mehrere Komponenten ermöglichen Internetzugang."
-},
-
-
-{
-frage:"Was bedeutet ISP?",
-antworten:[
-"Internet Service Provider",
-"Internal Security Program",
-"Internet System Port",
-"Input Service Protocol"
-],
-richtig:0,
-erklaerung:"ISP bedeutet Internetanbieter."
-},
-
-
-{
-frage:"Welche Technik nutzt Glasfaser?",
-antworten:[
-"Lichtsignale",
-"Papier",
-"Magnete",
-"Schall"
-],
-richtig:0,
-erklaerung:"Glasfaser überträgt Daten mit Licht."
-},
-
-
-{
-frage:"Welche Technologie gehört zum Mobilfunk?",
-antworten:[
-"5G",
-"HDMI",
-"USB",
-"SATA"
-],
-richtig:0,
-erklaerung:"5G ist ein Mobilfunkstandard."
-},
-
-
-{
-frage:"Was ist ein Intranet?",
-antworten:[
-"Ein internes Firmennetzwerk",
-"Das gesamte Internet",
-"Ein Antivirus",
-"Eine Festplatte"
-],
-richtig:0,
-erklaerung:"Ein Intranet ist nur intern zugänglich."
-},
-
-
-{
-frage:"Was ist ein Extranet?",
-antworten:[
-"Ein erweitertes Intranet mit externem Zugriff",
-"Ein Betriebssystem",
-"Eine Grafikkarte",
-"Ein Browser"
-],
-richtig:0,
-erklaerung:"Partner können begrenzten Zugriff erhalten."
-},
-
-
-{
-frage:"Welche Vorteile haben Netzwerke?",
-antworten:[
-"Gemeinsame Nutzung von Ressourcen",
-"Mehr Viren",
-"Keine Kommunikation",
-"Keine Datensicherung"
-],
-richtig:0,
-erklaerung:"Netzwerke ermöglichen Zusammenarbeit."
-},
-
-
-{
-frage:"Welche Risiken gibt es bei Netzwerken?",
-antworten:[
-"Hackerangriffe und unbefugter Zugriff",
-"Schnellere Arbeit",
-"Mehr Speicher",
-"Bessere Auflösung"
-],
-richtig:0,
-erklaerung:"Netzwerke müssen geschützt werden."
-},
-
-{
-frage:"Was ist ein Client-Server-Netzwerk?",
-antworten:[
-"Ein Netzwerk mit Clients und einem oder mehreren Servern",
-"Ein Netzwerk ohne Geräte",
-"Ein Netzwerk nur aus Druckern",
-"Ein Netzwerk ohne Daten"
-],
-richtig:0,
-erklaerung:"Server stellen Dienste bereit, Clients nutzen diese."
-},
-
-
-{
-frage:"Was ist ein Peer-to-Peer-Netzwerk?",
-antworten:[
-"Alle Computer sind gleichberechtigt",
-"Nur ein Server arbeitet",
-"Nur Router kommunizieren",
-"Es gibt keine Verbindung"
-],
-richtig:0,
-erklaerung:"Jeder Teilnehmer kann Dienste anbieten und nutzen."
-},
-
-
-{
-frage:"Was ist eine IP-Adresse?",
-antworten:[
-"Eine eindeutige Adresse eines Geräts im Netzwerk",
-"Ein Passwort",
-"Ein Programm",
-"Eine Festplatte"
-],
-richtig:0,
-erklaerung:"IP-Adressen identifizieren Geräte."
-},
-
-
-{
-frage:"Warum sind sichere Passwörter wichtig?",
-antworten:[
-"Sie schützen Konten vor Zugriffen",
-"Sie erhöhen die Bildschirmgröße",
-"Sie ersetzen Updates",
-"Sie speichern Dateien"
-],
-richtig:0,
-erklaerung:"Sichere Passwörter verhindern unbefugte Zugriffe."
-},
-
-
-{
-frage:"Was ist Zwei-Faktor-Authentifizierung?",
-antworten:[
-"Zusätzliche Anmeldung mit einem zweiten Sicherheitsfaktor",
-"Zwei gleiche Passwörter",
-"Zwei Computer",
-"Zwei Betriebssysteme"
-],
-richtig:0,
-erklaerung:"2FA erhöht die Sicherheit durch eine zweite Prüfung."
-},
-
-
-{
-frage:"Was ist Phishing?",
-antworten:[
-"Der Versuch, durch Täuschung Daten zu stehlen",
-"Eine Datensicherung",
-"Eine Hardwareprüfung",
-"Ein Update"
-],
-richtig:0,
-erklaerung:"Phishing nutzt gefälschte Nachrichten oder Webseiten."
-},
-
-
-{
-frage:"Wie gelangen Viren häufig auf Computer?",
-antworten:[
-"Über Anhänge, Downloads oder unsichere Webseiten",
-"Nur durch Monitore",
-"Nur durch Tastaturen",
-"Durch Papier"
-],
-richtig:0,
-erklaerung:"Viele Infektionen entstehen durch unsichere Dateien."
-},
-
-
-{
-frage:"Kann ein Computer ohne Internet infiziert werden?",
-antworten:[
-"Ja, zum Beispiel über USB-Sticks",
-"Nein, niemals",
-"Nur über WLAN",
-"Nur über Router"
-],
-richtig:0,
-erklaerung:"Schadsoftware kann auch offline übertragen werden."
-},
-
-
-{
-frage:"Was ist ein Keylogger?",
-antworten:[
-"Ein Programm, das Tastatureingaben aufzeichnet",
-"Ein Backup",
-"Ein Browser",
-"Ein Drucker"
-],
-richtig:0,
-erklaerung:"Keylogger können Passwörter ausspionieren."
-},
-
-
-{
-frage:"Was ist Spyware?",
-antworten:[
-"Schadsoftware zum Ausspionieren von Daten",
-"Ein Betriebssystem",
-"Ein Update",
-"Eine Firewall"
-],
-richtig:0,
-erklaerung:"Spyware sammelt heimlich Informationen."
-},
-
-
-{
-frage:"Warum sind regelmäßige Backups wichtig?",
-antworten:[
-"Sie schützen vor Datenverlust",
-"Sie entfernen Viren automatisch",
-"Sie erhöhen Bildschirmgröße",
-"Sie ersetzen Passwörter"
-],
-richtig:0,
-erklaerung:"Backups ermöglichen Wiederherstellung verlorener Daten."
-},
-
-
-{
-frage:"Welche Speichermedien können für Backups verwendet werden?",
-antworten:[
-"Externe Festplatte, NAS oder Cloud",
-"Nur Tastatur",
-"Nur Monitor",
-"Nur Maus"
-],
-richtig:0,
-erklaerung:"Backups können auf verschiedenen Medien gespeichert werden."
-},
-
-
-{
-frage:"Was bedeutet Verschlüsselung?",
-antworten:[
-"Daten werden geschützt und unlesbar gemacht",
-"Daten werden gelöscht",
-"Daten werden gedruckt",
-"Daten werden verlangsamt"
-],
-richtig:0,
-erklaerung:"Verschlüsselung schützt Informationen."
-},
-
-
-{
-frage:"Was schützt eine Bildschirmsperre?",
-antworten:[
-"Vor Zugriff durch andere Personen",
-"Vor Stromverbrauch",
-"Vor Updates",
-"Vor Speicherplatz"
-],
-richtig:0,
-erklaerung:"Eine Sperre schützt persönliche Daten."
-},
-
-
-{
-frage:"Was ist ein Administrator?",
-antworten:[
-"Ein Benutzer mit erweiterten Rechten",
-"Ein Virus",
-"Ein Router",
-"Eine Datei"
-],
-richtig:0,
-erklaerung:"Administratoren können Systeme verwalten."
-},
-
-
-{
-frage:"Warum sollte man Programme aktuell halten?",
-antworten:[
-"Weil Sicherheitslücken geschlossen werden",
-"Weil Dateien verschwinden",
-"Weil Hardware kaputtgeht",
-"Weil Internet verboten wird"
-],
-richtig:0,
-erklaerung:"Aktuelle Software ist sicherer."
-},
-
-
-{
-frage:"Was ist ein Browser?",
-antworten:[
-"Ein Programm zum Anzeigen von Webseiten",
-"Ein Prozessor",
-"Eine Festplatte",
-"Ein Router"
-],
-richtig:0,
-erklaerung:"Browser ermöglichen den Zugriff auf Webseiten."
-},
-
-
-{
-frage:"Was ist Streaming?",
-antworten:[
-"Direktes Abspielen von Medien über das Internet",
-"Dateien löschen",
-"Hardware austauschen",
-"Programme entfernen"
-],
-richtig:0,
-erklaerung:"Streaming überträgt Inhalte während der Nutzung."
-},
-
-
-{
-frage:"Was sind Cloud-Dienste?",
-antworten:[
-"Online bereitgestellte Dienste und Speicher",
-"Eine Grafikkarte",
-"Ein Kabel",
-"Eine Maus"
-],
-richtig:0,
-erklaerung:"Cloud-Dienste laufen auf entfernten Servern."
-},
-
-
-{
-frage:"Warum sollte man öffentliche WLANs vorsichtig nutzen?",
-antworten:[
-"Weil Daten abgefangen werden könnten",
-"Weil Computer explodieren",
-"Weil Updates verboten sind",
-"Weil Speicher verschwindet"
-],
-richtig:0,
-erklaerung:"Öffentliche WLANs können Sicherheitsrisiken haben."
+const fragen = [
+{
+    frage: "Wofuer steht die Abkuerzung LAN?",
+    antworten: ["Local Access Network", "Local Area Network", "Long Area Network", "Large Access Network"],
+    richtig: 1,
+    erklaerung: "LAN steht fuer Local Area Network."
+},
+{
+    frage: "Was ist der wichtigste Unterschied zwischen LAN und WLAN?",
+    antworten: ["WLAN ist schneller.", "LAN funktioniert weltweit.", "WLAN ist kabellos.", "LAN benoetigt immer einen Router."],
+    richtig: 2,
+    erklaerung: "Ein WLAN verbindet Geraete kabellos ueber Funk."
+},
+{
+    frage: "Was beschreibt ein WAN?",
+    antworten: ["Ein lokales Netzwerk", "Ein Druckernetzwerk", "Ein Netzwerk ueber grosse Entfernungen", "Ein Funknetzwerk"],
+    richtig: 2,
+    erklaerung: "WAN steht fuer Wide Area Network."
+},
+{
+    frage: "Welche Hauptaufgabe hat ein Router?",
+    antworten: ["Geraete innerhalb eines LAN verbinden", "Das lokale Netzwerk mit dem Internet verbinden", "Dateien speichern", "Programme installieren"],
+    richtig: 1,
+    erklaerung: "Router verbinden verschiedene Netzwerke miteinander."
+},
+{
+    frage: "Welche Aufgabe erfuellt ein Switch?",
+    antworten: ["Mehrere Geraete innerhalb eines LAN verbinden", "WLAN bereitstellen", "Viren entfernen", "Internet verschluesseln"],
+    richtig: 0,
+    erklaerung: "Ein Switch verbindet Geraete innerhalb eines lokalen Netzwerks."
+},
+{
+    frage: "Wozu dient ein Access Point?",
+    antworten: ["Zum Drucken", "Zum Bereitstellen eines WLANs", "Zum Speichern von Dateien", "Zum Erstellen von Backups"],
+    richtig: 1,
+    erklaerung: "Ein Access Point ermoeglicht drahtlosen Netzwerkzugang."
+},
+{
+    frage: "Wozu dient eine IP-Adresse?",
+    antworten: ["Zur Verschluesselung", "Zur eindeutigen Identifikation eines Geraets", "Zum Speichern von Dateien", "Zur Erhoehung der Geschwindigkeit"],
+    richtig: 1,
+    erklaerung: "Eine IP-Adresse identifiziert ein Geraet im Netzwerk."
+},
+{
+    frage: "Welche Rolle uebernimmt ein Server?",
+    antworten: ["Er nutzt Dienste.", "Er bietet Dienste und Ressourcen an.", "Er ersetzt den Router.", "Er schuetzt automatisch vor Viren."],
+    richtig: 1,
+    erklaerung: "Server stellen Dienste fuer Clients bereit."
+},
+{
+    frage: "Welche Aufgabe hat ein Client?",
+    antworten: ["Er stellt Dienste bereit.", "Er nutzt Dienste eines Servers.", "Er verwaltet alle Netzwerke.", "Er ersetzt den Switch."],
+    richtig: 1,
+    erklaerung: "Clients greifen auf Serverdienste zu."
+},
+{
+    frage: "Was bedeutet HTTPS?",
+    antworten: ["Eine unverschluesselte Verbindung", "Eine verschluesselte Verbindung zu Webseiten", "Ein Betriebssystem", "Ein Antivirenprogramm"],
+    richtig: 1,
+    erklaerung: "HTTPS schuetzt Daten zwischen Browser und Webseite."
+},
+{
+    frage: "Welche Aussage zu einem VPN ist richtig?",
+    antworten: ["Es macht den Computer schneller.", "Es verschluesselt die Datenuebertragung.", "Es ersetzt eine Firewall.", "Es entfernt Viren."],
+    richtig: 1,
+    erklaerung: "Ein VPN verschluesselt die Verbindung und erhoeht die Privatsphaere."
+},
+{
+    frage: "Was ist der Unterschied zwischen Download und Upload?",
+    antworten: ["Download bedeutet Hochladen.", "Download bedeutet Herunterladen, Upload bedeutet Hochladen.", "Beides bedeutet dasselbe.", "Download funktioniert nur ueber WLAN."],
+    richtig: 1,
+    erklaerung: "Download laedt Daten herunter, Upload sendet Daten ins Internet."
+},
+{
+    frage: "100 Mbit/s entsprechen ungefaehr:",
+    antworten: ["100 MB/s", "50 MB/s", "12,5 MB/s", "8 MB/s"],
+    richtig: 2,
+    erklaerung: "Da 1 Byte = 8 Bit gilt: 100 geteilt durch 8 = 12,5 MB/s."
+},
+{
+    frage: "Was bedeutet Latenz oder Ping?",
+    antworten: ["Die Reaktionszeit einer Verbindung", "Die Groesse einer Festplatte", "Die Anzahl der Dateien", "Die Bildschirmaufloesung"],
+    richtig: 0,
+    erklaerung: "Ein niedriger Ping bedeutet eine schnelle Reaktion."
+},
+{
+    frage: "Welche Backup-Art speichert alle Daten?",
+    antworten: ["Vollbackup", "Inkrementelles Backup", "Differenzielles Backup", "Cloud-Synchronisation"],
+    richtig: 0,
+    erklaerung: "Ein Vollbackup sichert alle ausgewaehlten Daten."
+},
+{
+    frage: "Welche Backup-Art speichert nur Aenderungen seit dem letzten Backup?",
+    antworten: ["Vollbackup", "Inkrementelles Backup", "Festplattenbackup", "Systemupdate"],
+    richtig: 1,
+    erklaerung: "Ein inkrementelles Backup speichert nur neue Aenderungen."
+},
+{
+    frage: "Welche Backup-Art speichert Aenderungen seit dem letzten Vollbackup?",
+    antworten: ["Differenzielles Backup", "Inkrementelles Backup", "Vollbackup", "Cloudbackup"],
+    richtig: 0,
+    erklaerung: "Ein differenzielles Backup basiert auf dem letzten Vollbackup."
+},
+{
+    frage: "Was bedeutet die 3-2-1-Regel?",
+    antworten: ["3 Passwoerter, 2 Benutzer, 1 Computer", "3 Kopien, 2 Speichermedien, 1 Kopie an anderem Ort", "3 Server, 2 Router, 1 Firewall", "3 Updates, 2 Programme, 1 Backup"],
+    richtig: 1,
+    erklaerung: "Die Regel schuetzt vor Datenverlust."
+},
+{
+    frage: "Was bedeutet Authentifizierung?",
+    antworten: ["Wer bist du?", "Was darfst du?", "Wie schnell ist dein Internet?", "Wie gross ist deine Festplatte?"],
+    richtig: 0,
+    erklaerung: "Authentifizierung ueberprueft die Identitaet."
+},
+{
+    frage: "Was bedeutet Autorisierung?",
+    antworten: ["Wer bist du?", "Was darfst du tun?", "Welche Hardware besitzt du?", "Welche Software nutzt du?"],
+    richtig: 1,
+    erklaerung: "Autorisierung legt Rechte fest."
+},
+{
+    frage: "Welche Malware tarnt sich als nuetzliches Programm?",
+    antworten: ["Virus", "Wurm", "Trojaner", "Firewall"],
+    richtig: 2,
+    erklaerung: "Ein Trojaner sieht harmlos aus, enthaelt aber Schadcode."
+},
+{
+    frage: "Was ist Ransomware?",
+    antworten: ["Ein Programm zum Schreiben", "Schadsoftware, die Daten verschluesselt und Geld fordert", "Ein Betriebssystem", "Ein Backup"],
+    richtig: 1,
+    erklaerung: "Ransomware sperrt Daten und verlangt Loesegeld."
+},
+{
+    frage: "Was macht ein Antivirenprogramm?",
+    antworten: ["Es erkennt und entfernt Schadsoftware", "Es erhoeht automatisch den RAM", "Es ersetzt das Betriebssystem", "Es erstellt Webseiten"],
+    richtig: 0,
+    erklaerung: "Antivirenprogramme schuetzen vor Malware."
+},
+{
+    frage: "Was sind Virensignaturen?",
+    antworten: ["Bekannte Merkmale von Schadsoftware", "Passwoerter", "Internetadressen", "Hardwareteile"],
+    richtig: 0,
+    erklaerung: "Antivirenprogramme erkennen bekannte Schadcodes."
+},
+{
+    frage: "Welche Aufgabe hat eine Firewall?",
+    antworten: ["Datenverkehr ueberwachen und unerlaubte Zuegriffe blockieren", "Dateien speichern", "Programme installieren", "Fotos bearbeiten"],
+    richtig: 0,
+    erklaerung: "Firewalls schuetzen Netzwerke vor Angriffen."
+},
+{
+    frage: "Was ist eine Software-Firewall?",
+    antworten: ["Eine Firewall auf dem Computer", "Eine Festplatte", "Ein Routerkabel", "Ein Betriebssystem"],
+    richtig: 0,
+    erklaerung: "Software-Firewalls laufen direkt auf Geraeten."
+},
+{
+    frage: "Was ist eine Hardware-Firewall?",
+    antworten: ["Eine Firewall im Netzwerkgeraet wie Router", "Ein USB-Stick", "Ein Bildschirm", "Eine App"],
+    richtig: 0,
+    erklaerung: "Hardware-Firewalls schuetzen ganze Netzwerke."
+},
+{
+    frage: "Was ist ein Betriebssystem?",
+    antworten: ["Die grundlegende Software eines Computers", "Ein Kabel", "Eine Maus", "Ein Spiel"],
+    richtig: 0,
+    erklaerung: "Das Betriebssystem verbindet Hardware und Programme."
+},
+{
+    frage: "Was bedeutet GUI?",
+    antworten: ["Grafische Benutzeroberflaeche", "Grosses USB-Geraet", "Globale Internet-Verbindung", "Geraetesoftware"],
+    richtig: 0,
+    erklaerung: "GUI bedeutet Bedienung ueber Fenster und Symbole."
+},
+{
+    frage: "Was bedeutet CLI?",
+    antworten: ["Bedienung ueber Texteingaben und Befehle", "Ein Bildschirmtyp", "Ein Speichermedium", "Eine Grafikkarte"],
+    richtig: 0,
+    erklaerung: "CLI nutzt eine Kommandozeile."
+},
+{
+    frage: "Was ist Multitasking?",
+    antworten: ["Mehrere Programme gleichzeitig ausfuehren", "Mehrere Passwoerter benutzen", "Mehrere Computer kaufen", "Dateien loeschen"],
+    richtig: 0,
+    erklaerung: "Multitasking ermoeglicht paralleles Arbeiten."
+},
+{
+    frage: "Was ist ein Treiber?",
+    antworten: ["Ein Programm zur Steuerung von Hardware", "Ein Virus", "Eine Webseite", "Ein Benutzerkonto"],
+    richtig: 0,
+    erklaerung: "Treiber ermoeglichen die Kommunikation zwischen Betriebssystem und Hardware."
+},
+{
+    frage: "Was ist RAM?",
+    antworten: ["Ein schneller Speicher fuer laufende Programme", "Eine dauerhafte Festplatte", "Ein Router", "Eine Firewall"],
+    richtig: 0,
+    erklaerung: "RAM speichert aktuell benoetigte Daten."
+},
+{
+    frage: "Was passiert, wenn der RAM nicht ausreicht?",
+    antworten: ["Der Computer kann langsamer werden", "Der Bildschirm verschwindet", "Das Internet wird geloescht", "Die Tastatur wird entfernt"],
+    richtig: 0,
+    erklaerung: "Das System nutzt dann langsameren virtuellen Speicher."
+},
+{
+    frage: "Was ist eine HDD?",
+    antworten: ["Eine klassische Festplatte", "Ein Browser", "Eine Firewall", "Ein Betriebssystem"],
+    richtig: 0,
+    erklaerung: "HDD ist ein magnetischer Massenspeicher."
+},
+{
+    frage: "Was ist eine SSD?",
+    antworten: ["Ein schneller elektronischer Massenspeicher", "Eine Tastatur", "Ein Router", "Ein Monitor"],
+    richtig: 0,
+    erklaerung: "SSDs sind schneller als klassische HDDs."
+},
+{
+    frage: "Was zeigt der Task-Manager?",
+    antworten: ["Auslastung von CPU, RAM und Programmen", "Nur Fotos", "Nur Passwoerter", "Nur WLAN"],
+    richtig: 0,
+    erklaerung: "Der Task-Manager zeigt Systeminformationen."
+},
+{
+    frage: "Was zeigt der Geraete-Manager?",
+    antworten: ["Die angeschlossene Hardware des Computers", "Internetgeschwindigkeit", "Benuerpasswoerter", "Webseiten"],
+    richtig: 0,
+    erklaerung: "Der Geraete-Manager zeigt Hardware und Treiber."
+},
+{
+    frage: "Was ist eine CPU?",
+    antworten: ["Der Prozessor des Computers", "Ein Speicherstick", "Ein Netzwerk", "Ein Bildschirm"],
+    richtig: 0,
+    erklaerung: "Die CPU fuehrt Berechnungen und Befehle aus."
+},
+{
+    frage: "Welches Programm oeffnet normalerweise .docx Dateien?",
+    antworten: ["Word", "Paint", "Browser", "Rechner"],
+    richtig: 0,
+    erklaerung: "DOCX-Dateien werden meist mit Textverarbeitungen geoeffnet."
+},
+{
+    frage: "Welches Programm oeffnet normalerweise PDF-Dateien?",
+    antworten: ["PDF-Reader", "Task-Manager", "Geraete-Manager", "Datei-Explorer"],
+    richtig: 0,
+    erklaerung: "PDF-Reader zeigen PDF-Dokumente an."
+},
+{
+    frage: "Welche Dateiendungen sind typische Installationsdateien?",
+    antworten: [".exe und .msi", ".jpg und .png", ".mp3 und .wav", ".txt und .doc"],
+    richtig: 0,
+    erklaerung: "Viele Windows-Programme nutzen .exe oder .msi."
+},
+{
+    frage: "Was bedeutet Deinstallation?",
+    antworten: ["Entfernen eines Programms vom Computer", "Installation eines Updates", "Erstellen eines Backups", "Aendern des Hintergrundbildes"],
+    richtig: 0,
+    erklaerung: "Beim Deinstallieren werden Programme entfernt."
+},
+{
+    frage: "Welche Tastenkombination oeffnet die Windows-Einstellungen?",
+    antworten: ["Windows + I", "STRG + ALT + ENTF", "ALT + F4", "Windows + E"],
+    richtig: 0,
+    erklaerung: "Windows + I oeffnet die Einstellungen."
+},
+{
+    frage: "Wie wechselt man die Tastatursprache unter Windows?",
+    antworten: ["Windows + Leertaste", "STRG + S", "ALT + TAB", "F5"],
+    richtig: 0,
+    erklaerung: "Windows + Leertaste wechselt Eingabesprachen."
+},
+{
+    frage: "Warum sind Updates wichtig?",
+    antworten: ["Sie schliessen Sicherheitsluecken und verbessern das System", "Sie entfernen Hardware", "Sie machen Programme illegal", "Sie loeschen alle Daten"],
+    richtig: 0,
+    erklaerung: "Updates erhoehen Sicherheit und Stabilitaet."
+},
+{
+    frage: "Warum kann nach einem Update ein Neustart noetig sein?",
+    antworten: ["Damit Aenderungen vollstaendig uebernommen werden", "Damit Dateien verschwinden", "Damit WLAN geloescht wird", "Damit Programme gesperrt werden"],
+    richtig: 0,
+    erklaerung: "Ein Neustart aktiviert Systemaenderungen."
+},
+{
+    frage: "Wie weit sollte der Bildschirm ungefaehr entfernt sein?",
+    antworten: ["50-80 cm", "5 cm", "2 Meter", "10 Meter"],
+    richtig: 0,
+    erklaerung: "Ein Abstand von etwa 50-80 cm ist empfehlenswert."
+},
+{
+    frage: "Wo sollte die Oberkante des Bildschirms sein?",
+    antworten: ["Auf Augenhoehe", "Unter dem Tisch", "Ueber der Decke", "Auf dem Boden"],
+    richtig: 0,
+    erklaerung: "Die Augenhoehe verhindert eine unguenstige Haltung."
+},
+{
+    frage: "Warum sollte man regelmassig Pausen machen?",
+    antworten: ["Um Augen und Koerper zu entlasten", "Um Updates zu loeschen", "Um Speicherplatz zu erhoehen", "Um Programme zu installieren"],
+    richtig: 0,
+    erklaerung: "Pausen reduzieren koerperliche Belastungen."
+},
+{
+    frage: "Was kann eine falsche Sitzhaltung verursachen?",
+    antworten: ["Ruecken- und Nackenschmerzen", "Schnelleres Internet", "Mehr Speicherplatz", "Neue Programme"],
+    richtig: 0,
+    erklaerung: "Falsche Haltung kann Beschwerden verursachen."
+},
+{
+    frage: "Was bedeutet Barrierefreiheit?",
+    antworten: ["Technik fuer moeglichst viele Menschen nutzbar machen", "Computer nur fuer Experten bauen", "Internet sperren", "Programme entfernen"],
+    richtig: 0,
+    erklaerung: "Barrierefreiheit ermoeglicht Nutzung fuer verschiedene Menschen."
+},
+{
+    frage: "Was macht ein Bildschirmleseprogramm?",
+    antworten: ["Es liest Bildschirminhalte laut vor", "Es loescht Dateien", "Es erstellt Backups", "Es installiert Treiber"],
+    richtig: 0,
+    erklaerung: "Bildschirmleser helfen sehbehinderten Personen."
+},
+{
+    frage: "Warum werden Untertitel verwendet?",
+    antworten: ["Zur Unterstuetzung hoerbehinderter Menschen", "Zum Speichern von Dateien", "Zum Schutz vor Viren", "Zum Erhoehen der Geschwindigkeit"],
+    richtig: 0,
+    erklaerung: "Untertitel machen Inhalte zugaenglicher."
+},
+{
+    frage: "Was bedeutet ISP?",
+    antworten: ["Internet Service Provider", "Internal Security Program", "Internet System Port", "Input Service Protocol"],
+    richtig: 0,
+    erklaerung: "ISP bedeutet Internetanbieter."
+},
+{
+    frage: "Welche Technik nutzt Glasfaser?",
+    antworten: ["Lichtsignale", "Papier", "Magnete", "Schall"],
+    richtig: 0,
+    erklaerung: "Glasfaser uebertraegt Daten mit Licht."
+},
+{
+    frage: "Welche Technologie gehoert zum Mobilfunk?",
+    antworten: ["5G", "HDMI", "USB", "SATA"],
+    richtig: 0,
+    erklaerung: "5G ist ein Mobilfunkstandard."
+},
+{
+    frage: "Was ist ein Intranet?",
+    antworten: ["Ein internes Firmennetzwerk", "Das gesamte Internet", "Ein Antivirus", "Eine Festplatte"],
+    richtig: 0,
+    erklaerung: "Ein Intranet ist nur intern zugaenglich."
+},
+{
+    frage: "Was ist ein Peer-to-Peer-Netzwerk?",
+    antworten: ["Alle Computer sind gleichberechtigt", "Nur ein Server arbeitet", "Nur Router kommunizieren", "Es gibt keine Verbindung"],
+    richtig: 0,
+    erklaerung: "Jeder Teilnehmer kann Dienste anbieten und nutzen."
+},
+{
+    frage: "Warum sind sichere Passwoerter wichtig?",
+    antworten: ["Sie schuetzen Konten vor Zuegriffen", "Sie erhoehen die Bildschirmgroesse", "Sie ersetzen Updates", "Sie speichern Dateien"],
+    richtig: 0,
+    erklaerung: "Sichere Passwoerter verhindern unbefugte Zuegriffe."
+},
+{
+    frage: "Was ist Zwei-Faktor-Authentifizierung?",
+    antworten: ["Zusaetzliche Anmeldung mit einem zweiten Sicherheitsfaktor", "Zwei gleiche Passwoerter", "Zwei Computer", "Zwei Betriebssysteme"],
+    richtig: 0,
+    erklaerung: "2FA erhoeht die Sicherheit durch eine zweite Pruefung."
+},
+{
+    frage: "Was ist Phishing?",
+    antworten: ["Der Versuch, durch Taeuschung Daten zu stehlen", "Eine Datensicherung", "Eine Hardwarepruefung", "Ein Update"],
+    richtig: 0,
+    erklaerung: "Phishing nutzt gefaelschte Nachrichten oder Webseiten."
+},
+{
+    frage: "Wie gelangen Viren haeufig auf Computer?",
+    antworten: ["Ueber Anhaenge, Downloads oder unsichere Webseiten", "Nur durch Monitore", "Nur durch Tastaturen", "Durch Papier"],
+    richtig: 0,
+    erklaerung: "Viele Infektionen entstehen durch unsichere Dateien."
+},
+{
+    frage: "Kann ein Computer ohne Internet infiziert werden?",
+    antworten: ["Ja, zum Beispiel ueber USB-Sticks", "Nein, niemals", "Nur ueber WLAN", "Nur ueber Router"],
+    richtig: 0,
+    erklaerung: "Schadsoftware kann auch offline uebertragen werden."
+},
+{
+    frage: "Was ist ein Keylogger?",
+    antworten: ["Ein Programm, das Tastatureingaben aufzeichnet", "Ein Backup", "Ein Browser", "Ein Drucker"],
+    richtig: 0,
+    erklaerung: "Keylogger koennen Passwoerter ausspionieren."
+},
+{
+    frage: "Was bedeutet Verschluesselung?",
+    antworten: ["Daten werden geschuetzt und unlesbar gemacht", "Daten werden geloescht", "Daten werden gedruckt", "Daten werden verlangsamt"],
+    richtig: 0,
+    erklaerung: "Verschluesselung schuetzt Informationen."
+},
+{
+    frage: "Was ist ein Administrator?",
+    antworten: ["Ein Benuer mit erweiterten Rechten", "Ein Virus", "Ein Router", "Eine Datei"],
+    richtig: 0,
+    erklaerung: "Administratoren koennen Systeme verwalten."
+},
+{
+    frage: "Was ist ein Browser?",
+    antworten: ["Ein Programm zum Anzeigen von Webseiten", "Ein Prozessor", "Eine Festplatte", "Ein Router"],
+    richtig: 0,
+    erklaerung: "Browser ermoeglichen den Zuegriff auf Webseiten."
+},
+{
+    frage: "Was ist Streaming?",
+    antworten: ["Direktes Abspielen von Medien ueber das Internet", "Dateien loeschen", "Hardware austauschen", "Programme entfernen"],
+    richtig: 0,
+    erklaerung: "Streaming uebertraegt Inhalte waehrend der Nutzung."
+},
+{
+    frage: "Was sind Cloud-Dienste?",
+    antworten: ["Online bereitgestellte Dienste und Speicher", "Eine Grafikkarte", "Ein Kabel", "Eine Maus"],
+    richtig: 0,
+    erklaerung: "Cloud-Dienste laufen auf entfernten Servern."
+},
+{
+    frage: "Warum sollte manoeffentliche WLANs vorsichtig nutzen?",
+    antworten: ["Weil Daten abgefangen werden koennten", "Weil Computer explodieren", "Weil Updates verboten sind", "Weil Speicher verschwindet"],
+    richtig: 0,
+    erklaerung: "Oeffentliche WLANs koennen Sicherheitsrisiken haben."
 }
-
 ];
-
-
 
 let aktuelleFrage = 0;
 let punkte = 0;
+let beantwortet = false;
 
+function zeigeFrage() {
+    let q = fragen[aktuelleFrage];
+    document.getElementById("frageNummer").innerHTML = "Frage " + (aktuelleFrage + 1) + " von " + fragen.length;
+    document.getElementById("frage").innerHTML = q.frage;
 
+    let ausgabe = "";
+    q.antworten.forEach((antwort, index) => {
+        ausgabe += '<label class="antwort"><input type="radio" name="antwort" value="' + index + '">' + antwort + '</label>';
+    });
+    document.getElementById("antworten").innerHTML = ausgabe;
+    document.getElementById("ergebnis").innerHTML = "";
+    document.getElementById("ergebnis").className = "";
+    document.getElementById("next-btn").style.display = "none";
+    document.getElementById("balken").style.width = ((aktuelleFrage / fragen.length) * 100) + "%";
+    beantwortet = false;
+}
 
-function zeigeFrage(){
+function pruefen() {
+    if (beantwortet) return;
+    let auswahl = document.querySelector('input[name="antwort"]:checked');
+    let ergebnis = document.getElementById("ergebnis");
 
+    if (!auswahl) {
+        ergebnis.className = "falsch";
+        ergebnis.innerHTML = "Bitte zuerst eine Antwort auswaehlen.";
+        return;
+    }
 
-let q = fragen[aktuelleFrage];
+    beantwortet = true;
 
+    if (Number(auswahl.value) === fragen[aktuelleFrage].richtig) {
+        punkte++;
+        ergebnis.className = "richtig";
+        ergebnis.innerHTML = "Richtig! " + fragen[aktuelleFrage].erklaerung;
+    } else {
+        ergebnis.className = "falsch";
+        ergebnis.innerHTML = "Falsch! " + fragen[aktuelleFrage].erklaerung;
+    }
 
-document.getElementById("frageNummer").innerHTML =
-"Frage " + (aktuelleFrage+1) + " von " + fragen.length;
+    document.getElementById("next-btn").style.display = "inline-block";
+}
 
+function naechsteFrage() {
+    aktuelleFrage++;
+    if (aktuelleFrage < fragen.length) {
+        zeigeFrage();
+    } else {
+        document.querySelector(".quiz-container").innerHTML =
+            '<div id="ende">' +
+            '<h1>Quiz beendet!</h1>' +
+            '<h2>Dein Ergebnis</h2>' +
+            '<h3>' + punkte + ' von ' + fragen.length + ' richtig</h3>' +
+            '<h2>' + Math.round((punkte / fragen.length) * 100) + '%</h2>' +
+            '<button class="quiz-btn" onclick="location.reload()">Quiz neu starten</button>' +
+            '<a href="index.html" class="quiz-link">Zurueck zur Startseite</a>' +
+            '</div>';
+    }
+}
 
-document.getElementById("frage").innerHTML =
-q.frage;
-
-
-
-let ausgabe="";
-
-
-q.antworten.forEach((antwort,index)=>{
-
-
-ausgabe += `
-
-<label class="antwort">
-
-<input type="radio" name="antwort" value="${index}">
-
-${antwort}
-
-</label>
-
-`;
-
+document.getElementById('quiz-music').addEventListener('click', function() {
+    var btn = document.getElementById('quiz-music');
+    var audio = document.getElementById('bg-music');
+    if (audio.paused) {
+        audio.volume = 0.9;
+        audio.play().catch(function(error) {
+            console.log("Autoplay blockiert:", error);
+        });
+        btn.textContent = 'Musik pausieren';
+    } else {
+        audio.pause();
+        btn.textContent = 'Musik starten';
+    }
 });
 
-
-document.getElementById("antworten").innerHTML=ausgabe;
-
-
-document.getElementById("ergebnis").innerHTML="";
-
-
-document.getElementById("balken").style.width =
-((aktuelleFrage / fragen.length)*100)+"%";
-
-
-}
-
-
-
-
-function pruefen(){
-
-
-let auswahl =
-document.querySelector(
-'input[name="antwort"]:checked'
-);
-
-
-let ergebnis =
-document.getElementById("ergebnis");
-
-
-if(!auswahl){
-
-ergebnis.className="falsch";
-ergebnis.innerHTML="Bitte zuerst eine Antwort auswählen.";
-return;
-
-}
-
-
-
-if(Number(auswahl.value)===fragen[aktuelleFrage].richtig){
-
-punkte++;
-
-ergebnis.className="richtig";
-
-ergebnis.innerHTML=
-"✅ Richtig! "+fragen[aktuelleFrage].erklaerung;
-
-
-}else{
-
-
-ergebnis.className="falsch";
-
-ergebnis.innerHTML=
-"❌ Falsch! "+fragen[aktuelleFrage].erklaerung;
-
-
-}
-
-
-
-setTimeout(()=>{
-
-
-aktuelleFrage++;
-
-
-if(aktuelleFrage < fragen.length){
-
 zeigeFrage();
-
-
-}else{
-
-
-document.querySelector(".container").innerHTML=`
-
-<div id="ende">
-
-<h1>🎉 Quiz beendet!</h1>
-
-<h2>Dein Ergebnis</h2>
-
-<h3>${punkte} von ${fragen.length} richtig</h3>
-
-<h2>${Math.round((punkte/fragen.length)*100)}%</h2>
-
-
-<button onclick="location.reload()">
-
-Quiz neu starten
-
-</button>
-
-</div>
-
-`;
-
-
-}
-
-
-},1200);
-
-
-}
-
-
-
-zeigeFrage();
-
-
 </script>
 
-
 </body>
-
 </html>
