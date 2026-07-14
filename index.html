@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Quiz Seite der Faulen Arbeitstiere</title>
+        <link rel="stylesheet" href="index.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Geist+Pixel:ELSH@61.8&display=swap" rel="stylesheet">
+    </head>
+    <body>
+    <div id="main-content" style="text-align: center; margin-top: 50px;">
+        <h1 id="index_html_head_1"><img id="index_html_img_1" src="f32209c0-e396-4e9b-8774-4197303c54ff.png" alt="HTML5 Icon" style="width:128px;height:128px;">Willkommen auf der Quizseite der Faulen Arbeitstiere!</h1>
+        <p><a href="quiz.html">Hier</a> geht es zur ersten Quizfrage!</p>
+        <button id="start-music">Musik starten</button>
+    </div>
+    <audio id="bg-music" loop>
+        <source src="just relax, everything can wait… (minecraft music & ambience).m4a" type="audio/mp4">
+        Ihr Browser unterstützt das Audio-Element nicht.
+    </audio>
+
+    <script>
+        document.getElementById('start-music').addEventListener('click', function() {
+            var btn = document.getElementById('start-music');
+            var audio = document.getElementById('bg-music');
+            if (audio.paused) {
+                audio.volume = 0.9;
+                audio.play().catch(function(error) {
+                    console.log("Autoplay wurde vom Browser blockiert:", error);
+                });
+                btn.textContent = 'Musik pausieren';
+            } else {
+                audio.pause();
+                btn.textContent = 'Musik starten';
+            }
+        });
+    </script>
+</body>
+</html>
