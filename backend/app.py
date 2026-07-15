@@ -11,20 +11,101 @@ CORS(app)
 DB_PATH = "/data/bestenliste.db"
 
 BLOCKED = [
-    "adolf", "hitler", "nazi", "heil",
-    "badass", "pussy", "fuck", "shit", "bitch", "dick", "cock", "cunt",
-    "porn", "pornhub", "xvideos", "xnxx",
-    "drogen", "drug", "cocaine", "kokain", "heroin", "meth", "crack",
+    # Deutsch
+    "adolf", "hitler", "nazi", "nazis", "heil", "hakenkreuz", "reich",
+    "fick", "ficker", "ficken", "fickst", "fickt", "fickende",
+    "schlampe", "hure", "hurensohn", "fotze", "fotzen",
+    "muschi", "wichser", "wichsen", "wixxer",
+    "arschloch", "scheisse",
+    "vergewaltigung", "vergewaltige", "vergewaltigt",
+    "kinderschander", "kinderschänder", "kindesmissbrauch",
+    "bastard", "missgeburt",
+    "drecksau", "drecksack",
+    "morder", "mörder", "umbringen", "totmachen",
+    # English
+    "fuck", "fucker", "fucking", "motherfucker",
+    "shit", "bitch",
+    "asshole", "badass", "dumbass", "jackass",
+    "pussy", "pussie", "cunt",
+    "dick", "dickhead", "cock", "cocksucker",
+    "whore", "slut",
+    "nigger", "nigga", "spic", "kike", "chink", "gook",
+    "faggot", "fag", "dyke",
+    "retard", "retarded",
+    "rape", "rapist", "raping",
+    "pedophile", "pedophilia", "pedo", "paedophile",
+    "porn", "pornhub", "xvideos", "xnxx", "xhamster", "redtube", "onlyfans",
+    "drug", "drugs", "cocaine", "kokain", "heroin", "meth", "crack", "weed",
+    "lsd", "ecstasy", "mdma", "morphine", "opium", "drogen",
+    "murder", "kill", "killer", "killah",
     "terror", "bombe", "isis",
-    "fick", "ficker", "schlampe", "hure", "fotze", "muschi", "wichser",
-    "arschloch", "scheisse", "vergewaltig", "kindersch",
-    "bastard", "motherfucker",
+    # Français
+    "merde", "putain", "salope",
+    "bite", "chatte", "enculé", "enculer", "encule",
+    "niquer", "connard", "connasse", "batard",
+    "branleur", "viol", "violeur",
+    # Español
+    "puta", "puto", "mierda", "cabron", "cabrón", "coño", "cono",
+    "polla", "gilipollas", "hijoputa", "hijueputa",
+    "maricon", "maricón", "joder", "pendejo",
+    # Italiano
+    "cazzo", "puttana", "stronzo", "merda",
+    "vaffanculo", "fanculo", "coglione", "bastardo",
+    "violentare", "stupro",
+    # Português
+    "porra", "caralho", "merda",
+    "filhodaputa", "filhadaputa",
+    # Nederlands
+    "hoer", "hoeren", "kanker", "kankeren",
+    "teringlijer", "kankerlijer",
+    # Türkçe
+    "amk", "amina", "amcik", "sikerim", "sikeyim",
+    "orospu", "ibne", "yarrak", "yarak", "sikik",
+    # Русский
+    "блядь", "blyad", "хуй", "huy", "пизда", "pizda",
+    "ебать", "yebat", "сука", "suka",
+    # Polski
+    "kurwa", "chuj", "pierdol", "pierdole",
+    "jebac", "jebać", "zjebac",
+    "dziwka", "skurwysyn",
+    # Svenska
+    "fitta", "knulla", "knullade",
+    # Dansk
+    "kraftedme", "krafted",
+    "fisse",
+    # Slovenčina / Čeština
+    "kurva", "zmrd", "kokot",
+    # Magyar
+    "geci", "fasz", "kocsog",
+    # Română
+    "pula", "pizda", "curva",
+    # العربية
+    "شرموطة", "sharmuta",
+    "خرة", "khara", "قحبة", "qahba", "كس",
+    # 日本語
+    "ちんこ", "chinco", "まんこ", "manko",
+    # 汉语
+    "操你妈", "caonima", "草泥马",
+    "傻逼", "shabi",
+    # 한국어
+    "시발", "sibal", "씨발",
+    "지랄", "jiral", "병신", "byeongsin",
+    # اردو
+    "چودنا", "chudai", "لنڈ",
+    "بھوسڑا", "bhosra",
 ]
 
+LEET = {
+    "0": "o", "1": "i", "2": "z", "3": "e", "4": "a", "5": "s",
+    "6": "g", "7": "t", "8": "b", "9": "g",
+    "@": "a", "$": "s", "!": "i", "+": "t",
+}
+
 def name_ok(name):
-    name_lower = name.lower()
+    name_clean = name.lower().replace(" ", "").replace("_", "").replace("-", "").replace(".", "").replace(",", "")
+    name_leet = "".join(LEET.get(c, c) for c in name_clean)
     for b in BLOCKED:
-        if b in name_lower:
+        if b in name_clean or b in name_leet:
             return False
     return True
 
