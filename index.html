@@ -25,7 +25,7 @@
             var btn = document.getElementById('start-music');
             var audio = document.getElementById('bg-music');
             if (audio.paused) {
-                audio.volume = 0.9;
+                audio.volume = 1.0;
                 audio.play().catch(function(error) {
                     console.log("Autoplay wurde vom Browser blockiert:", error);
                 });

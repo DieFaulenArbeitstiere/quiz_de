@@ -311,7 +311,7 @@ document.getElementById('quiz-music').addEventListener('click', function() {
     var btn = document.getElementById('quiz-music');
     var audio = document.getElementById('bg-music');
     if (audio.paused) {
-        audio.volume = 0.9;
+        audio.volume = 1.0;
         audio.play().catch(function(error) {
             console.log("Autoplay blockiert:", error);
         });
