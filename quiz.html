@@ -338,6 +338,8 @@ function scoreEintragen() {
             document.querySelector(".bestenliste-eingabe button").disabled = true;
             document.querySelector(".bestenliste-eingabe button").textContent = "Gespeichert!";
             leaderboardLaden();
+        } else {
+            r.json().then(function(d) { alert(d.error || "Fehler beim Speichern."); });
         }
     }).catch(function() {
         alert("Bestenliste-Server nicht erreichbar.");

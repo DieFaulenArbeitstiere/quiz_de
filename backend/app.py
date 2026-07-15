@@ -2,12 +2,31 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import sqlite3
 import os
+import re
 import socket
 
 app = Flask(__name__, static_folder=None)
 CORS(app)
 
 DB_PATH = "/data/bestenliste.db"
+
+BLOCKED = [
+    "adolf", "hitler", "nazi", "heil",
+    "badass", "pussy", "fuck", "shit", "bitch", "dick", "cock", "cunt",
+    "porn", "pornhub", "xvideos", "xnxx",
+    "drogen", "drug", "cocaine", "kokain", "heroin", "meth", "crack",
+    "terror", "bombe", "isis",
+    "fick", "ficker", "schlampe", "hure", "fotze", "muschi", "wichser",
+    "arschloch", "scheisse", "vergewaltig", "kindersch",
+    "bastard", "motherfucker",
+]
+
+def name_ok(name):
+    name_lower = name.lower()
+    for b in BLOCKED:
+        if b in name_lower:
+            return False
+    return True
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -33,6 +52,15 @@ except sqlite3.OperationalError:
     conn.commit()
     conn.close()
 
+# Alte Namen mit unzulaessigen Begriffen loeschen
+conn = get_db()
+alle = conn.execute("SELECT id, name FROM scores").fetchall()
+for row in alle:
+    if not name_ok(row["name"]):
+        conn.execute("DELETE FROM scores WHERE id = ?", (row["id"],))
+conn.commit()
+conn.close()
+
 def get_local_ip():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -55,9 +83,17 @@ def add_score():
     if not name or not punkte:
         return jsonify({"error": "Name und Punkte erforderlich"}), 400
 
+    if not name_ok(name):
+        return jsonify({"error": "Name enthaelt unzulaessige Begriffe"}), 400
+
     conn = get_db()
-    conn.execute("INSERT INTO scores (name, punkte, max, prozent, zeit) VALUES (?, ?, ?, ?, ?)",
-                 (name, punkte, max_fragen, prozent, zeit))
+    vorhanden = conn.execute("SELECT id FROM scores WHERE name = ?", (name,)).fetchone()
+    if vorhanden:
+        conn.execute("UPDATE scores SET punkte = ?, max = ?, prozent = ?, zeit = ?, datum = CURRENT_TIMESTAMP WHERE id = ?",
+                     (punkte, max_fragen, prozent, zeit, vorhanden["id"]))
+    else:
+        conn.execute("INSERT INTO scores (name, punkte, max, prozent, zeit) VALUES (?, ?, ?, ?, ?)",
+                     (name, punkte, max_fragen, prozent, zeit))
     conn.commit()
     conn.close()
     return jsonify({"ok": True}), 201
