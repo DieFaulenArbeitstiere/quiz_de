@@ -23,6 +23,16 @@ def init_db():
 
 init_db()
 
+# Migration: fehlende Spalte "zeit" nachtragen (alte DB ohne diese Spalte)
+try:
+    conn = get_db()
+    conn.execute("SELECT zeit FROM scores LIMIT 1")
+    conn.close()
+except sqlite3.OperationalError:
+    conn.execute("ALTER TABLE scores ADD COLUMN zeit TEXT NOT NULL DEFAULT ''")
+    conn.commit()
+    conn.close()
+
 def get_local_ip():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
