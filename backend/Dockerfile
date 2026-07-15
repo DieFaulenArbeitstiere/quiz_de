@@ -1,9 +1,9 @@
 FROM python:3.12-slim
 RUN mkdir -p /app/www /data
 WORKDIR /app
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY app.py .
+COPY backend/app.py .
 COPY index.html /app/www/
 COPY quiz.html /app/www/
 COPY index.css /app/www/

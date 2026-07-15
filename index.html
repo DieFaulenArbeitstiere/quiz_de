@@ -38,16 +38,11 @@
             }
         });
 
-        fetch("/api/serverinfo")
-        .then(function(r) { return r.json(); })
-        .then(function(info) {
-            document.getElementById("server-info").innerHTML =
-                '<p style="margin-top:20px;">Server-Adresse im lokalen Netzwerk: <strong>http://' + info.ip + ':' + info.port + '</strong></p>';
-        }).catch(function() {});
-
         fetch("/api/leaderboard")
         .then(function(r) { return r.json(); })
         .then(function(daten) {
+            document.getElementById("server-info").innerHTML =
+                '<p style="margin-top:20px;">Server-Adresse im lokalen Netzwerk: <strong>http://' + window.location.hostname + ':5000</strong></p>';
             if (!daten.length) {
                 document.getElementById("index-bestenliste").innerHTML = "<h3>Bestenliste</h3><p><em>Noch keine Eintraege.</em></p>";
                 return;
