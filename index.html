@@ -38,10 +38,16 @@
             }
         });
 
+        var serverOnline = false;
+
+        fetch("/api/serverinfo").then(function(r) { return r.json(); }).then(function(info) {
+            serverOnline = true;
+            document.getElementById("server-info").innerHTML =
+                '<p style="margin-top:20px;">Server-Adresse im lokalen Netzwerk: <strong>http://' + info.ip + ':5000</strong></p>';
+        }).catch(function() {});
+
         fetch("/api/leaderboard").then(function(r) {
             if (!r.ok) throw new Error("API nicht erreichbar");
-            document.getElementById("server-info").innerHTML =
-                '<p style="margin-top:20px;">Server-Adresse im lokalen Netzwerk: <strong>http://' + window.location.hostname + ':5000</strong></p>';
             return r.json();
         }).then(function(daten) {
             if (!daten.length) {
