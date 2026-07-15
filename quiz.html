@@ -301,10 +301,55 @@ function naechsteFrage() {
             '<h2>Dein Ergebnis</h2>' +
             '<h3>' + punkte + ' von ' + fragen.length + ' richtig</h3>' +
             '<h2>' + Math.round((punkte / fragen.length) * 100) + '%</h2>' +
+            '<div class="bestenliste-eingabe">' +
+            '<input type="text" id="name-input" placeholder="Dein Name" maxlength="20">' +
+            '<button class="quiz-btn" onclick="scoreEintragen()">Punktzahl speichern</button>' +
+            '</div>' +
+            '<div id="bestenliste"></div>' +
             '<button class="quiz-btn" onclick="location.reload()">Quiz neu starten</button>' +
             '<a href="index.html" class="quiz-link">Zurueck zur Startseite</a>' +
             '</div>';
+        leaderboardLaden();
     }
+}
+
+function scoreEintragen() {
+    var name = document.getElementById("name-input").value.trim();
+    if (!name) { alert("Bitte gib deinen Namen ein."); return; }
+    fetch("http://localhost:5000/api/score", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name: name, punkte: punkte, max: fragen.length})
+    }).then(function(r) {
+        if (r.ok) {
+            document.getElementById("name-input").disabled = true;
+            document.querySelector(".bestenliste-eingabe button").disabled = true;
+            document.querySelector(".bestenliste-eingabe button").textContent = "Gespeichert!";
+            leaderboardLaden();
+        }
+    }).catch(function() {
+        alert("Bestenliste-Server nicht erreichbar. Ist Docker gestartet?");
+    });
+}
+
+function leaderboardLaden() {
+    var div = document.getElementById("bestenliste");
+    fetch("http://localhost:5000/api/leaderboard")
+    .then(function(r) { return r.json(); })
+    .then(function(daten) {
+        if (!daten.length) { div.innerHTML = "<p><em>Noch keine Eintraege.</em></p>"; return; }
+        var html = "<h3>Bestenliste</h3><table class='leaderboard'><tr><th>#</th><th>Name</th><th>Punkte</th><th>%</th></tr>";
+        for (var i = 0; i < daten.length; i++) {
+            var row = daten[i];
+            var cls = i === 0 ? "gold" : i === 1 ? "silber" : i === 2 ? "bronze" : "";
+            html += "<tr class='" + cls + "'><td>" + (i+1) + "</td><td>" + row.name + "</td><td>" + row.punkte + "/" + row.max + "</td><td>" + row.prozent + "%</td></tr>";
+        }
+        html += "</table>";
+        div.innerHTML = html;
+    })
+    .catch(function() {
+        div.innerHTML = "<p><em>Server nicht erreichbar.</em></p>";
+    });
 }
 
 document.getElementById('quiz-music').addEventListener('click', function() {

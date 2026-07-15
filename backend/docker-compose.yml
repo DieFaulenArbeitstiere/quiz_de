@@ -1,0 +1,10 @@
+services:
+  bestenliste:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - bestenliste_data:/data
+
+volumes:
+  bestenliste_data:

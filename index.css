@@ -203,3 +203,51 @@ a:hover {
 #quiz-music:hover {
     opacity: 0.8;
 }
+
+.bestenliste-eingabe {
+    margin: 20px 0;
+}
+
+#name-input {
+    font-family: "Geist Pixel", sans-serif;
+    font-size: 1rem;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #84e5e5;
+    margin-right: 10px;
+    width: 200px;
+}
+
+.leaderboard {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 500px;
+    background-color: #84e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.leaderboard th {
+    background-color: #0ce217;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.leaderboard td {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.leaderboard .gold td {
+    background-color: #ffd70066;
+}
+
+.leaderboard .silber td {
+    background-color: #c0c0c066;
+}
+
+.leaderboard .bronze td {
+    background-color: #cd7f3266;
+}
