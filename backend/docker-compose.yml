@@ -5,7 +5,4 @@ services:
       dockerfile: backend/Dockerfile
     network_mode: host
     volumes:
-      - bestenliste_data:/data
-
-volumes:
-  bestenliste_data:
+      - ./daten:/data
