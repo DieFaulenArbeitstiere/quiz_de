@@ -12,90 +12,114 @@ DB_PATH = "/data/bestenliste.db"
 
 BLOCKED = [
     # Deutsch
-    "adolf", "hitler", "nazi", "nazis", "heil", "hakenkreuz", "reich",
+    "adolf", "hitler", "nazi", "nazis", "nazist", "heil", "hakenkreuz", "reich",
     "fick", "ficker", "ficken", "fickst", "fickt", "fickende",
-    "schlampe", "hure", "hurensohn", "fotze", "fotzen",
-    "muschi", "wichser", "wichsen", "wixxer",
-    "arschloch", "scheisse",
-    "vergewaltigung", "vergewaltige", "vergewaltigt",
+    "schlampe", "hure", "hurensohn", "hurenkind", "fotze", "fotzen",
+    "muschi", "wichser", "wichsen", "wixxer", "wixxen",
+    "arschloch", "scheisse", "scheiss", "schiss",
+    "vergewaltigung", "vergewaltige", "vergewaltigt", "vergewaltig",
     "kinderschander", "kinderschänder", "kindesmissbrauch",
-    "bastard", "missgeburt",
-    "drecksau", "drecksack",
+    "bastard", "missgeburt", "mistgeburt",
+    "drecksau", "drecksack", "dreckstuck",
     "morder", "mörder", "umbringen", "totmachen",
+    "neger", "zigeuner",
+    "sau", "saumensch", "schwein", "dreckschwein",
+    "trottel", "idiot", "vollidiot", "depp",
+    "kacke", "kacken", "kackst",
+    "pisse", "pissen", "piss",
     # English
-    "fuck", "fucker", "fucking", "motherfucker",
-    "shit", "bitch",
+    "fuck", "fucker", "fucking", "motherfucker", "motherfuck",
+    "shit", "shitting", "bullshit", "bitch", "bitching",
     "asshole", "badass", "dumbass", "jackass",
     "pussy", "pussie", "cunt",
-    "dick", "dickhead", "cock", "cocksucker",
-    "whore", "slut",
-    "nigger", "nigga", "spic", "kike", "chink", "gook",
-    "faggot", "fag", "dyke",
-    "retard", "retarded",
-    "rape", "rapist", "raping",
+    "dick", "dickhead", "dickface", "cock", "cocksucker",
+    "whore", "slut", "slutty",
+    "nigger", "nigga", "neger", "spic", "kike", "chink", "gook", "coon",
+    "faggot", "fag", "fagget", "dyke",
+    "retard", "retarded", "retardation",
+    "rape", "rapist", "raping", "raped",
     "pedophile", "pedophilia", "pedo", "paedophile",
     "porn", "pornhub", "xvideos", "xnxx", "xhamster", "redtube", "onlyfans",
-    "drug", "drugs", "cocaine", "kokain", "heroin", "meth", "crack", "weed",
-    "kiffer", "kiffen", "stoned", "pothead",
-    "grassfreak", "grasfreak", "grassriecher", "grasraucher",
-    "haschisch", "hash", "cannabis", "marihuana",
+    "drug", "drugs", "cocaine", "kokain", "crack", "heroin", "meth", "weed",
+    "kiffer", "kiffen", "stoned", "pothead", "stoner",
+    "grassfreak", "grasfreak", "grassriecher", "grasraucher", "haschisch", "hash", "cannabis", "marihuana",
     "lsd", "ecstasy", "mdma", "morphine", "opium", "drogen",
     "murder", "kill", "killer", "killah",
-    "terror", "bombe", "isis",
+    "terror", "terrorist", "bombe", "isis", "islamicstate",
     # Français
-    "merde", "putain", "salope",
-    "bite", "chatte", "enculé", "enculer", "encule",
-    "niquer", "connard", "connasse", "batard",
-    "branleur", "viol", "violeur",
+    "merde", "putain", "putain", "salope", "salop",
+    "bite", "bitte", "chatte", "enculé", "enculer", "encule",
+    "niquer", "nique", "connard", "connasse", "batard",
+    "branleur", "branler", "viol", "violeur", "violer",
+    "couille", "cul", "petasse", "pétasse",
+    "suce", "sucer", "suceur",
     # Español
-    "puta", "puto", "mierda", "cabron", "cabrón", "coño", "cono",
-    "polla", "gilipollas", "hijoputa", "hijueputa",
-    "maricon", "maricón", "joder", "pendejo",
+    "puta", "puto", "puta", "mierda", "cabron", "cabrón",
+    "coño", "cono", "polla", "gilipollas",
+    "hijoputa", "hijueputa", "hijodeputa",
+    "maricon", "maricón", "joder", "jodete", "pendejo",
+    "violar", "violador",
     # Italiano
     "cazzo", "puttana", "stronzo", "merda",
     "vaffanculo", "fanculo", "coglione", "bastardo",
-    "violentare", "stupro",
+    "violentare", "stupro", "violentatore",
+    "minchia", "troia",
     # Português
     "porra", "caralho", "merda",
     "filhodaputa", "filhadaputa",
+    "puta", "puto", "viado", "bicha",
     # Nederlands
-    "hoer", "hoeren", "kanker", "kankeren",
-    "teringlijer", "kankerlijer",
+    "hoer", "hoeren", "kanker", "kankeren", "kanker",
+    "teringlijer", "kankerlijer", "tering",
+    "kut", "lul",
     # Türkçe
-    "amk", "amina", "amcik", "sikerim", "sikeyim",
-    "orospu", "ibne", "yarrak", "yarak", "sikik",
+    "amk", "amına", "amina", "amcık", "amcik",
+    "sikerim", "sikeyim", "sikik", "sikmek",
+    "orospu", "orospu", "ibne", "yarrak", "yarak",
+    "piç", "pic", "göt", "got",
     # Русский
-    "блядь", "blyad", "хуй", "huy", "пизда", "pizda",
-    "ебать", "yebat", "сука", "suka",
+    "блядь", "blyad", "blyat", "хуй", "huy", "huynya",
+    "пизда", "pizda", "pizdec",
+    "ебать", "yebat", "yeban", "yobaniy",
+    "сука", "suka", "sukablyad",
+    "гандон", "gandon", "шлюха", "shlyukha",
+    "пидор", "pidor", "pidar",
     # Polski
-    "kurwa", "chuj", "pierdol", "pierdole",
-    "jebac", "jebać", "zjebac",
+    "kurwa", "kurwy", "chuj", "chuje",
+    "pierdol", "pierdole", "pierdolony",
+    "jebac", "jebać", "zjebac", "zjebać",
     "dziwka", "skurwysyn",
     # Svenska
-    "fitta", "knulla", "knullade",
+    "fitta", "fittan", "knulla", "knullade",
+    "hora", "kuk",
     # Dansk
-    "kraftedme", "krafted",
-    "fisse",
+    "kraftedme", "krafted", "fisse",
+    "pik", "lort",
     # Slovenčina / Čeština
     "kurva", "zmrd", "kokot",
     # Magyar
-    "geci", "fasz", "kocsog",
+    "geci", "fasz", "kocsog", "szar",
     # Română
-    "pula", "pizda", "curva",
+    "pula", "pizda", "curva", "cacat",
     # العربية
     "شرموطة", "sharmuta",
     "خرة", "khara", "قحبة", "qahba", "كس",
+    "عرص", "متناك",
     # 日本語
     "ちんこ", "chinco", "まんこ", "manko",
+    "うんこ", "kusobaba", "くそ",
     # 汉语
     "操你妈", "caonima", "草泥马",
-    "傻逼", "shabi",
+    "傻逼", "shabi", "他妈的", "tamade",
     # 한국어
-    "시발", "sibal", "씨발",
-    "지랄", "jiral", "병신", "byeongsin",
+    "시발", "sibal", "씨발", "ssibal",
+    "지랄", "jiral", "병신", "byeongsin", "좆", "jot",
     # اردو
     "چودنا", "chudai", "لنڈ",
-    "بھوسڑا", "bhosra",
+    "بھوسڑا", "bhosra", "گدا",
+    # हिन्दी
+    "chutiya", "bhenchod", "madarchod", "gaand",
+    "lodu", "bhosdike",
 ]
 
 LEET = {
@@ -136,12 +160,15 @@ except sqlite3.OperationalError:
     conn.commit()
     conn.close()
 
-# Alte Namen mit unzulaessigen Begriffen loeschen
+# Alte Namen mit unzulaessigen Begriffen umbenennen oder loeschen
 conn = get_db()
 alle = conn.execute("SELECT id, name FROM scores").fetchall()
 for row in alle:
     if not name_ok(row["name"]):
-        conn.execute("DELETE FROM scores WHERE id = ?", (row["id"],))
+        if row["name"].lower() == "neger":
+            conn.execute("UPDATE scores SET name = 'DieFaulenArbeitstiere' WHERE id = ?", (row["id"],))
+        else:
+            conn.execute("DELETE FROM scores WHERE id = ?", (row["id"],))
 conn.commit()
 conn.close()
 
@@ -191,7 +218,7 @@ def add_score():
 @app.route("/api/leaderboard", methods=["GET"])
 def get_leaderboard():
     conn = get_db()
-    rows = conn.execute("SELECT name, punkte, max, prozent, zeit, datum FROM scores ORDER BY prozent DESC, punkte DESC, datum ASC LIMIT 20").fetchall()
+    rows = conn.execute("SELECT name, punkte, max, prozent, zeit, datum FROM scores ORDER BY prozent DESC, punkte DESC, datum ASC LIMIT 15").fetchall()
     conn.close()
     return jsonify([dict(r) for r in rows])
 
