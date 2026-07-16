@@ -36,6 +36,9 @@ BLOCKED = [
     "pedophile", "pedophilia", "pedo", "paedophile",
     "porn", "pornhub", "xvideos", "xnxx", "xhamster", "redtube", "onlyfans",
     "drug", "drugs", "cocaine", "kokain", "heroin", "meth", "crack", "weed",
+    "kiffer", "kiffen", "stoned", "pothead",
+    "grassfreak", "grasfreak", "grassriecher", "grasraucher",
+    "haschisch", "hash", "cannabis", "marihuana",
     "lsd", "ecstasy", "mdma", "morphine", "opium", "drogen",
     "murder", "kill", "killer", "killah",
     "terror", "bombe", "isis",
@@ -168,10 +171,16 @@ def add_score():
         return jsonify({"error": "Name enthaelt unzulaessige Begriffe"}), 400
 
     conn = get_db()
-    vorhanden = conn.execute("SELECT id FROM scores WHERE name = ?", (name,)).fetchone()
-    if vorhanden:
+    bereits = conn.execute("SELECT id FROM scores WHERE name = ? AND punkte = ? AND max = ? AND zeit = ?",
+                           (name, punkte, max_fragen, zeit)).fetchone()
+    if bereits:
+        conn.close()
+        return jsonify({"error": "Dieses Ergebnis wurde bereits gespeichert"}), 409
+
+    alt = conn.execute("SELECT id FROM scores WHERE name = ?", (name,)).fetchone()
+    if alt:
         conn.execute("UPDATE scores SET punkte = ?, max = ?, prozent = ?, zeit = ?, datum = CURRENT_TIMESTAMP WHERE id = ?",
-                     (punkte, max_fragen, prozent, zeit, vorhanden["id"]))
+                     (punkte, max_fragen, prozent, zeit, alt["id"]))
     else:
         conn.execute("INSERT INTO scores (name, punkte, max, prozent, zeit) VALUES (?, ?, ?, ?, ?)",
                      (name, punkte, max_fragen, prozent, zeit))
